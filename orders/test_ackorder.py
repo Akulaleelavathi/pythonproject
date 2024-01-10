@@ -7,45 +7,45 @@ from settings.apirequest import postApi,getApi
 @pytest.fixture
 def test_allcustomers():
     payload = {
-        "workspaceId":main_workspace['work_spaceId'],
-        "customerId": "",
-        "pageNo": 1,
-        "pageSize": 20,
-        "sortBy": "orderPlacedAt",
-        "sortDirection": "DESC",
-        "includeSummary": True,
-        "includeInvoice": True,
-        "includeCustomer": True,
-        "includeStatus": True,
-        "includeCFA": True,
-        "includeDivision": True,
-        "searchKeyword": "",
-        "startDate": "2023-12-29",
-        "endDate": "2024-01-05",
-        "filterModel": {
-            "headDivisionIds": [],
-            "divisionIds": [],
-            "cfaIds": [],
-            "status": [],
-            "customerIds": []
-        },
-        "skip": 1
-    }
-    url = f"{main_url}/commerce-v2/orders?workspaceId={main_workspace['work_spaceId']}"
+    "workspaceId": main_workspace["work_spaceId"],
+    "customerId": "",
+    "pageNo": 1,
+    "pageSize": 20,
+    "sortBy": "orderPlacedAt",
+    "sortDirection": "DESC",
+    "includeSummary": True,
+    "includeInvoice": True,
+    "includeCustomer": True,
+    "includeStatus": True,
+    "includeCFA": True,
+    "includeDivision": True,
+    "searchKeyword": "",
+    "startDate": "2024-01-03",
+    "endDate": "2024-01-10",
+    "filterModel": {
+        "cfaIds": [],
+        "status": [
+            "SubmittedByCustomer"
+        ],
+        "customerIds": []
+    },
+    "skip": 1
+}
+
+    url ="https://api-uat.beta.pharmconnect.com/commerce-v2/orders?workspaceId=8ef5d569-3419-44e5-bb33-3ecfd260f796"
 
     response = postApi(url, payload)
+    print(response)
     data_list=[]
 
-    # Extract unique order IDs and customer IDs for orders with status "SubmittedByCustomer"
 
 
     for i in response["order"]:
         if i["status"] == "SubmittedByCustomer":
             data_list.append({"orderId": i["id"], "customerId": i["customerId"]})
 
-
+    # print(data_list)
     return data_list
-    # return (submitted_orders_info)
 
 
 

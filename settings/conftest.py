@@ -1,6 +1,6 @@
 
-main_url = "https://api-qa.beta.pharmconnect.com"
-mobile_number= 8329769199
+main_url = "https://api-uat.beta.pharmconnect.com"
+mobile_number=7979797979
 #9810424353
 #8008472669
 #9448066818
