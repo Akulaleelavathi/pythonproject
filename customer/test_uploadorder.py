@@ -3,18 +3,48 @@ import requests
 from users.test_login import main_workspace,main_token
 import pytest
 from settings.conftest import main_url
-from settings.apirequest import postApi
+from settings.apirequest import postApi,getApi
 # from settings.auth_config import headers
-# from customer.test_orderincustomer import test_customerId
 
-# cart_data = []
+
+
+
+
+@pytest.fixture
+def test_customeridandnames():
+    url = f"{main_url}/customers/{main_workspace['work_spaceId']}?includeCustomerGroupAssignments=1&includeWorkspaceMembers=1&pageNo=4&pageSize=40&includeOrderCount=1"
+    response = getApi(url)
+    # print(response)
+
+    nameslist=[]
+    for i in response["customers"]:
+
+        nameslist.append({"name":i["companyName"],"id":i["id"]})
+
+    print(nameslist)
+
+    for i in nameslist:
+        if i["name"]=="RAJASTHAN DRUG HOUSE":
+
+            return(i["id"])
+
+
+
+
+
+
+
+
+
+
 file_path = r"C:\Users\Lenovo\Downloads\RAJASTHAN DRUG HOUSE.xlsx"
 @pytest.fixture
-def test_upload():
-    url =f"{main_url}/commerce-v2/poFile/upload/{main_workspace['work_spaceId']}?customerId=0938ed8d-09e0-42f3-af27-126d743b4e2b&importSource=upload&parserType=C2D_ORDER"
+def test_upload(test_customeridandnames):
 
+    customer_id = test_customeridandnames
+    url =f"{main_url}/commerce-v2/poFile/upload/{main_workspace['work_spaceId']}?customerId={customer_id}&importSource=upload&parserType=C2D_ORDER"
     payload={
-    "customerId": "0938ed8d-09e0-42f3-af27-126d743b4e2b",
+    "customerId": test_customeridandnames,
     "importSource": "upload",
     "parserType": "C2D_ORDER",
     }
@@ -47,7 +77,7 @@ def test_upload():
         payload = {
             "searchKey": i["product_name"]
         }
-        url = "https://api-uat.beta.pharmconnect.com/commerce-v2/products/search/customer/8ef5d569-3419-44e5-bb33-3ecfd260f796?customerId=0938ed8d-09e0-42f3-af27-126d743b4e2b&pageNo=1&pageSize=20"
+        url = f"{main_url}/commerce-v2/products/search/customer/{main_workspace['work_spaceId']}?customerId={customer_id}&pageNo=1&pageSize=20"
         response = postApi(url, payload)
         if response["total"] != 0:
             if i["data"]["qty"] == 0:
@@ -72,10 +102,10 @@ def test_upload():
 #
 #
 @pytest.fixture
-def test_add_card(test_upload):
+def test_add_card(test_upload,test_customeridandnames):
     payload={
 
-            "customerId": "0938ed8d-09e0-42f3-af27-126d743b4e2b",
+            "customerId":test_customeridandnames,
             "sellerWorkspaceId": main_workspace["work_spaceId"],
             "source": "upload",
             "poFileId": test_upload[0]["pf_id"],
@@ -93,45 +123,16 @@ def test_add_card(test_upload):
     url=f"{main_url}/commerce-v2/orders/additemtoactiveorder/{main_workspace['work_spaceId']}"
 
     response=postApi(url,payload)
-    print(response)
+    # print(response)
     return (response["orders"][0]["pofileId"])
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def test_checkout(test_add_card):
+def test_checkout(test_add_card,test_customeridandnames):
     payloaad={
     "sellerWorkspaceId": main_workspace["work_spaceId"],
-    "customerId": "0938ed8d-09e0-42f3-af27-126d743b4e2b",
+    "customerId":test_customeridandnames,
     "poFileIds": [test_add_card]
 
 

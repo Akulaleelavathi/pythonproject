@@ -10,6 +10,7 @@ def test_customerId():
     url=f"{main_url}/customers/{main_workspace['work_spaceId']}?includeCustomerGroupAssignments=1&includeWorkspaceMembers=1&pageNo=1&pageSize=20&includeOrderCount=1"
     response=getApi(url)
     list=[]
+
     for i in response["customers"]:
         list.append(i["id"])
     return (list)

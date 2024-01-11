@@ -32,10 +32,10 @@ def test_allcustomers():
     "skip": 1
 }
 
-    url ="https://api-uat.beta.pharmconnect.com/commerce-v2/orders?workspaceId=8ef5d569-3419-44e5-bb33-3ecfd260f796"
+    url =f"{main_url}/commerce-v2/orders?{main_workspace['work_spaceId']}"
 
     response = postApi(url, payload)
-    print(response)
+    # print(response)
     data_list=[]
 
 

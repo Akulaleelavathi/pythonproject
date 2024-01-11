@@ -28,7 +28,7 @@ def test_cfas(test_get_products):
         pageNo = 1
         pageSize = 20
         base_url=f"{main_url}/commerce-v2/products/search/{main_workspace['work_spaceId']}?pageNo={pageNo}&pageSize={pageSize}&customerId="
-        # # base_url="https://api-qa.beta.pharmconnect.com/commerce-v2/products/search/8ef5d569-3419-44e5-bb33-3ecfd260f796?pageNo=1&pageSize=20&customerId="
+        # base_url="https://api-qa.beta.pharmconnect.com/commerce-v2/products/search/8ef5d569-3419-44e5-bb33-3ecfd260f796?pageNo=1&pageSize=20&customerId="
         response=postApi(base_url,payload)
         print(response)
         print(len(test_get_products))
